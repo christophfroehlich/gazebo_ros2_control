@@ -20,6 +20,7 @@ find_package(geometry_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_action REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(trajectory_msgs REQUIRED)
 
 install(DIRECTORY
   launch
@@ -39,6 +40,11 @@ add_executable(example_velocity examples/example_velocity.cpp)
 ament_target_dependencies(example_velocity
   rclcpp
   std_msgs
+)
+add_executable(example_position_topic examples/example_position_topic.cpp)
+ament_target_dependencies(example_position_topic
+  rclcpp
+  trajectory_msgs
 )
 
 add_executable(example_effort examples/example_effort.cpp)
@@ -77,6 +83,7 @@ install(
   TARGETS
     example_position
     example_velocity
+    example_position_topic
     example_effort
     example_diff_drive
     example_tricycle_drive
