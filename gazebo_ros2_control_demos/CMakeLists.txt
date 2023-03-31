@@ -35,6 +35,18 @@ ament_target_dependencies(example_position
   rclcpp_action
   control_msgs
 )
+add_executable(example_position_with_velocity examples/example_position_with_velocity.cpp)
+ament_target_dependencies(example_position_with_velocity
+  rclcpp
+  rclcpp_action
+  control_msgs
+)
+add_executable(example_position_cancel examples/example_position_cancel.cpp)
+ament_target_dependencies(example_position_cancel
+  rclcpp
+  rclcpp_action
+  control_msgs
+)
 
 add_executable(example_velocity examples/example_velocity.cpp)
 ament_target_dependencies(example_velocity
@@ -82,8 +94,10 @@ endif()
 install(
   TARGETS
     example_position
-    example_velocity
+    example_position_cancel
+    example_position_with_velocity
     example_position_topic
+    example_velocity
     example_effort
     example_diff_drive
     example_tricycle_drive

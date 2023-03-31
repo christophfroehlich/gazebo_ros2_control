@@ -21,6 +21,7 @@ joint_trajectory_controller:
       - position
       - velocity
     gains.slider_to_cart.ff_velocity_scale: 1.0
+    #gains.slider_to_cart.p: 1.0
 imu_sensor_broadcaster:
   ros__parameters:
     sensor_name: cart_imu_sensor
