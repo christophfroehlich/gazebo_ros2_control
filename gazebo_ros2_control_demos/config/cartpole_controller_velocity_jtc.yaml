@@ -20,6 +20,7 @@ joint_trajectory_controller:
     state_interfaces:
       - position
       - velocity
+    allow_nonzero_velocity_stop: true
     gains.slider_to_cart.ff_velocity_scale: 1.0
     #gains.slider_to_cart.p: 1.0
 imu_sensor_broadcaster:

@@ -27,7 +27,7 @@ int main(int argc, char * argv[])
 {
   rclcpp::init(argc, argv);
 
-  node = std::make_shared<rclcpp::Node>("position_topic_test_node");
+  node = std::make_shared<rclcpp::Node>("position_topic_empty_test_node");
 
   auto publisher = node->create_publisher<trajectory_msgs::msg::JointTrajectory>(
     "/joint_trajectory_controller/joint_trajectory", 10);
@@ -41,31 +41,6 @@ int main(int argc, char * argv[])
   std::vector<std::string> joint_names = {"slider_to_cart"};
 
   std::vector<trajectory_msgs::msg::JointTrajectoryPoint> points;
-  trajectory_msgs::msg::JointTrajectoryPoint point;
-  point.time_from_start = rclcpp::Duration::from_seconds(0.0);  // start asap
-  point.positions.resize(joint_names.size());
-
-  point.positions[0] = -3.0;
-
-  trajectory_msgs::msg::JointTrajectoryPoint point2;
-  point2.time_from_start = rclcpp::Duration::from_seconds(1.0);
-  point2.positions.resize(joint_names.size());
-  point2.positions[0] = -4.0;
-
-  trajectory_msgs::msg::JointTrajectoryPoint point3;
-  point3.time_from_start = rclcpp::Duration::from_seconds(2.0);
-  point3.positions.resize(joint_names.size());
-  point3.positions[0] = -2.0;
-
-  trajectory_msgs::msg::JointTrajectoryPoint point4;
-  point4.time_from_start = rclcpp::Duration::from_seconds(3.0);
-  point4.positions.resize(joint_names.size());
-  point4.positions[0] = -3.0;
-
-  points.push_back(point);
-  points.push_back(point2);
-  points.push_back(point3);
-  points.push_back(point4);
 
   commands.joint_names = joint_names;
   commands.points = points;

@@ -41,6 +41,12 @@ ament_target_dependencies(example_position_with_velocity
   rclcpp_action
   control_msgs
 )
+add_executable(example_position_with_velocity_nonzero examples/example_position_with_velocity_nonzero.cpp)
+ament_target_dependencies(example_position_with_velocity_nonzero
+  rclcpp
+  rclcpp_action
+  control_msgs
+)
 add_executable(example_position_cancel examples/example_position_cancel.cpp)
 ament_target_dependencies(example_position_cancel
   rclcpp
@@ -55,6 +61,11 @@ ament_target_dependencies(example_velocity
 )
 add_executable(example_position_topic examples/example_position_topic.cpp)
 ament_target_dependencies(example_position_topic
+  rclcpp
+  trajectory_msgs
+)
+add_executable(example_position_topic_empty examples/example_position_topic_empty.cpp)
+ament_target_dependencies(example_position_topic_empty
   rclcpp
   trajectory_msgs
 )
@@ -96,7 +107,9 @@ install(
     example_position
     example_position_cancel
     example_position_with_velocity
+    example_position_with_velocity_nonzero
     example_position_topic
+    example_position_topic_empty
     example_velocity
     example_effort
     example_diff_drive
