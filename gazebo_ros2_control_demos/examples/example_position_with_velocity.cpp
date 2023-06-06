@@ -87,7 +87,7 @@ int main(int argc, char * argv[])
 
   node = std::make_shared<rclcpp::Node>("trajectory_test_node");
 
-  std::cout << "node created" << std::endl;
+  std::cout << "node created with sim_time " << node->get_parameter("use_sim_time").as_bool() << std::endl;
 
   rclcpp_action::Client<control_msgs::action::FollowJointTrajectory>::SharedPtr action_client;
   action_client = rclcpp_action::create_client<control_msgs::action::FollowJointTrajectory>(
@@ -107,6 +107,7 @@ int main(int argc, char * argv[])
   std::vector<std::string> joint_names = {"slider_to_cart"};
 
   std::vector<trajectory_msgs::msg::JointTrajectoryPoint> points;
+  
   trajectory_msgs::msg::JointTrajectoryPoint point;
   point.time_from_start = rclcpp::Duration::from_seconds(0.0);  // start asap
   point.positions.resize(joint_names.size());
@@ -149,6 +150,10 @@ int main(int argc, char * argv[])
   control_msgs::action::FollowJointTrajectory_Goal goal_msg;
   goal_msg.goal_time_tolerance = rclcpp::Duration::from_seconds(1.0);
   goal_msg.trajectory.joint_names = joint_names;
+  rclcpp::Clock clock(RCL_ROS_TIME);
+  goal_msg.trajectory.header.stamp = clock.now();
+  // goal_msg.trajectory.header.stamp = node->get_clock()->now();
+  std::cout << "sec: " << goal_msg.trajectory.header.stamp.sec << " nanosec: " << goal_msg.trajectory.header.stamp.nanosec << "\n";
   goal_msg.trajectory.points = points;
 
   auto goal_handle_future = action_client->async_send_goal(goal_msg, opt);
