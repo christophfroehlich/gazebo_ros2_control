@@ -2,6 +2,18 @@
 Changelog for package gazebo_ros2_control_demos
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.6.1 (2023-06-09)
+------------------
+* Add pre-commit and CI-format (`#206 <https://github.com/ros-controls/gazebo_ros2_control/issues/206>`_)
+  * Add pre-commit and ci-format
+* Contributors: Christoph Fröhlich
+
+0.6.0 (2023-05-23)
+------------------
+* Clean shutdown position example (`#196 <https://github.com/ros-controls/gazebo_ros2_control/issues/196>`_)
+* Remove publish_rate parameter (`#179 <https://github.com/ros-controls/gazebo_ros2_control/issues/179>`_)
+* Contributors: Alejandro Hernández Cordero, Tony Najjar
+
 0.5.1 (2023-02-07)
 ------------------
 
