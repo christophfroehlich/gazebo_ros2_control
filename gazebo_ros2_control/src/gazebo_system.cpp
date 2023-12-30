@@ -299,7 +299,11 @@ void GazeboSystem::registerJoints(
     }
 
     // check if joint is actuated (has command interfaces) or passive
-    this->dataPtr->is_joint_actuated_[j] = (joint_info.command_interfaces.size() > 0);
+    if (this->dataPtr->is_joint_actuated_[j] = (joint_info.command_interfaces.size() > 0)) {
+      RCLCPP_INFO_STREAM(this->nh_->get_logger(), "\tactuated");
+    } else {
+      RCLCPP_INFO_STREAM(this->nh_->get_logger(), "\tpassive");
+    }
   }
 }
 
