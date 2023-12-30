@@ -479,23 +479,39 @@ GazeboSystem::perform_command_mode_switch(
   const std::vector<std::string> & start_interfaces,
   const std::vector<std::string> & stop_interfaces)
 {
+  auto has_interface =
+    [](const std::vector<hardware_interface::InterfaceInfo> & interfaces,
+      const std::string & name) {
+      return std::find_if(
+        interfaces.begin(), interfaces.end(), [&name](
+          const hardware_interface::InterfaceInfo & info) {
+          return info.name.compare(name) == 0;
+        }) != interfaces.end();
+    };
+
   for (unsigned int j = 0; j < this->dataPtr->joint_names_.size(); j++) {
+    auto & joint_info = info_.joints[j];
     std::cout << "joint " << this->dataPtr->joint_names_[j] << std::endl;
+
     std::cout << "perform_command_mode_switch: stop_interfaces" << std::endl;
     for (const std::string & interface_name : stop_interfaces) {
       // Clear joint control method bits corresponding to stop interfaces
-      if (interface_name == (this->dataPtr->joint_names_[j] + "/" +
-        hardware_interface::HW_IF_POSITION))
+      if (has_interface(joint_info.command_interfaces, hardware_interface::HW_IF_POSITION) &&
+        interface_name ==
+        (this->dataPtr->joint_names_[j] + "/" + hardware_interface::HW_IF_POSITION))
       {
         this->dataPtr->joint_control_methods_[j] &= static_cast<ControlMethod_>(VELOCITY & EFFORT);
         std::cout << "control method: position" << std::endl;
-      } else if (interface_name == (this->dataPtr->joint_names_[j] + "/" + // NOLINT
-        hardware_interface::HW_IF_VELOCITY))
+      } else if ( // NOLINT
+        has_interface(joint_info.command_interfaces, hardware_interface::HW_IF_VELOCITY) &&
+        interface_name ==
+        (this->dataPtr->joint_names_[j] + "/" + hardware_interface::HW_IF_VELOCITY))
       {
         this->dataPtr->joint_control_methods_[j] &= static_cast<ControlMethod_>(POSITION & EFFORT);
         std::cout << "control method: velocity" << std::endl;
-      } else if (interface_name == (this->dataPtr->joint_names_[j] + "/" + // NOLINT
-        hardware_interface::HW_IF_EFFORT))
+      } else if ( // NOLINT
+        has_interface(joint_info.command_interfaces, hardware_interface::HW_IF_EFFORT) &&
+        interface_name == (this->dataPtr->joint_names_[j] + "/" + hardware_interface::HW_IF_EFFORT))
       {
         this->dataPtr->joint_control_methods_[j] &=
           static_cast<ControlMethod_>(POSITION & VELOCITY);
@@ -508,18 +524,22 @@ GazeboSystem::perform_command_mode_switch(
     for (const std::string & interface_name : start_interfaces) {
       std::cout << "Joint " << this->dataPtr->joint_names_[j] << " interface: " << interface_name <<
         std::endl;
-      if (interface_name == (this->dataPtr->joint_names_[j] + "/" +
-        hardware_interface::HW_IF_POSITION))
+      if (has_interface(joint_info.command_interfaces, hardware_interface::HW_IF_POSITION) &&
+        interface_name ==
+        (this->dataPtr->joint_names_[j] + "/" + hardware_interface::HW_IF_POSITION))
       {
         this->dataPtr->joint_control_methods_[j] |= POSITION;
         std::cout << "control method: position" << std::endl;
-      } else if (interface_name == (this->dataPtr->joint_names_[j] + "/" + // NOLINT
-        hardware_interface::HW_IF_VELOCITY))
+      } else if ( // NOLINT
+        has_interface(joint_info.command_interfaces, hardware_interface::HW_IF_VELOCITY) &&
+        interface_name ==
+        (this->dataPtr->joint_names_[j] + "/" + hardware_interface::HW_IF_VELOCITY))
       {
         this->dataPtr->joint_control_methods_[j] |= VELOCITY;
         std::cout << "control method: velocity" << std::endl;
-      } else if (interface_name == (this->dataPtr->joint_names_[j] + "/" + // NOLINT
-        hardware_interface::HW_IF_EFFORT))
+      } else if ( // NOLINT
+        has_interface(joint_info.command_interfaces, hardware_interface::HW_IF_EFFORT) &&
+        interface_name == (this->dataPtr->joint_names_[j] + "/" + hardware_interface::HW_IF_EFFORT))
       {
         this->dataPtr->joint_control_methods_[j] |= EFFORT;
         std::cout << "control method: effort" << std::endl;
