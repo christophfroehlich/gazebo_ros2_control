@@ -480,40 +480,52 @@ GazeboSystem::perform_command_mode_switch(
   const std::vector<std::string> & stop_interfaces)
 {
   for (unsigned int j = 0; j < this->dataPtr->joint_names_.size(); j++) {
+    std::cout << "joint " << this->dataPtr->joint_names_[j] << std::endl;
+    std::cout << "perform_command_mode_switch: stop_interfaces" << std::endl;
     for (const std::string & interface_name : stop_interfaces) {
       // Clear joint control method bits corresponding to stop interfaces
       if (interface_name == (this->dataPtr->joint_names_[j] + "/" +
         hardware_interface::HW_IF_POSITION))
       {
         this->dataPtr->joint_control_methods_[j] &= static_cast<ControlMethod_>(VELOCITY & EFFORT);
+        std::cout << "control method: position" << std::endl;
       } else if (interface_name == (this->dataPtr->joint_names_[j] + "/" + // NOLINT
         hardware_interface::HW_IF_VELOCITY))
       {
         this->dataPtr->joint_control_methods_[j] &= static_cast<ControlMethod_>(POSITION & EFFORT);
+        std::cout << "control method: velocity" << std::endl;
       } else if (interface_name == (this->dataPtr->joint_names_[j] + "/" + // NOLINT
         hardware_interface::HW_IF_EFFORT))
       {
         this->dataPtr->joint_control_methods_[j] &=
           static_cast<ControlMethod_>(POSITION & VELOCITY);
+        std::cout << "control method: effort" << std::endl;
       }
     }
 
     // Set joint control method bits corresponding to start interfaces
+    std::cout << "perform_command_mode_switch: start_interfaces" << std::endl;
     for (const std::string & interface_name : start_interfaces) {
+      std::cout << "Joint " << this->dataPtr->joint_names_[j] << " interface: " << interface_name <<
+        std::endl;
       if (interface_name == (this->dataPtr->joint_names_[j] + "/" +
         hardware_interface::HW_IF_POSITION))
       {
         this->dataPtr->joint_control_methods_[j] |= POSITION;
+        std::cout << "control method: position" << std::endl;
       } else if (interface_name == (this->dataPtr->joint_names_[j] + "/" + // NOLINT
         hardware_interface::HW_IF_VELOCITY))
       {
         this->dataPtr->joint_control_methods_[j] |= VELOCITY;
+        std::cout << "control method: velocity" << std::endl;
       } else if (interface_name == (this->dataPtr->joint_names_[j] + "/" + // NOLINT
         hardware_interface::HW_IF_EFFORT))
       {
         this->dataPtr->joint_control_methods_[j] |= EFFORT;
+        std::cout << "control method: effort" << std::endl;
       }
     }
+    std::cout << std::endl;
   }
 
   // mimic joint has the same control mode as mimicked joint
@@ -601,16 +613,33 @@ hardware_interface::return_type GazeboSystem::write(
       if (this->dataPtr->joint_control_methods_[j] & POSITION) {
         this->dataPtr->sim_joints_[j]->SetPosition(0, this->dataPtr->joint_position_cmd_[j], true);
         this->dataPtr->sim_joints_[j]->SetVelocity(0, 0.0);
+        if (first_write) {
+          std::cout << "Setting joint " << this->dataPtr->joint_names_[j] << " to position " <<
+            this->dataPtr->joint_position_cmd_[j] << std::endl;
+        }
       } else if (this->dataPtr->joint_control_methods_[j] & VELOCITY) { // NOLINT
         this->dataPtr->sim_joints_[j]->SetVelocity(0, this->dataPtr->joint_velocity_cmd_[j]);
+        if (first_write) {
+          std::cout << "Setting joint " << this->dataPtr->joint_names_[j] << " to velocity " <<
+            this->dataPtr->joint_velocity_cmd_[j] << std::endl;
+        }
       } else if (this->dataPtr->joint_control_methods_[j] & EFFORT) { // NOLINT
         this->dataPtr->sim_joints_[j]->SetForce(0, this->dataPtr->joint_effort_cmd_[j]);
+        if (first_write) {
+          std::cout << "Setting joint " << this->dataPtr->joint_names_[j] << " to effort " <<
+            this->dataPtr->joint_effort_cmd_[j] << std::endl;
+        }
       } else if (this->dataPtr->is_joint_actuated_[j]) {
         // Fallback case is a velocity command of zero (only for actuated joints)
         this->dataPtr->sim_joints_[j]->SetVelocity(0, 0.0);
+        if (first_write) {
+          std::cout << "Setting joint " << this->dataPtr->joint_names_[j] <<
+            " to velocity 0.0 (fallback)" << std::endl;
+        }
       }
     }
   }
+  first_write = false;
 
   this->dataPtr->last_update_sim_time_ros_ = sim_time_ros;
 

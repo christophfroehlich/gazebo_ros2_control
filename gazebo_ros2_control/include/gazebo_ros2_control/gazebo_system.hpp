@@ -88,6 +88,8 @@ private:
 
   /// \brief Private data class
   std::unique_ptr<GazeboSystemPrivate> dataPtr;
+
+  bool first_write = true;
 };
 
 }  // namespace gazebo_ros2_control
